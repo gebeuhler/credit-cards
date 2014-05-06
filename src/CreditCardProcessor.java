@@ -1,22 +1,26 @@
 //package com.george.creditcards;
 
 import java.util.*;
+import java.lang.StringBuilder;
+//import java.math.BigInteger;
 
 public class CreditCardProcessor
 {
 	private class CreditCard
 	{
 		private String name;
-		private int number;	
+		private String number;	
 		private int limit;
 		private int balance;
+		private boolean isLuhnCompliant;
 
-		public CreditCard(String name, int number, int limit)
+		public CreditCard(String name, String number, int limit, boolean isLuhnCompliant)
 		{
 			this.name = name;
 			this.number = number;
 			this.limit = limit;
 			balance = 0;
+			this.isLuhnCompliant = isLuhnCompliant;
 		}
 
 		public String getName()
@@ -29,12 +33,12 @@ public class CreditCardProcessor
 			this.name = name;
 		}
 
-		public int getNumber()
+		public String getNumber()
 		{
 			return number;
 		}
 
-		public void setNumber(int number)
+		public void setNumber(String number)
 		{
 			this.number = number;
 		}
@@ -58,6 +62,16 @@ public class CreditCardProcessor
 		{
 			this.balance = balance;
 		}
+		
+		public boolean getIsLuhnCompliant()
+		{
+			return isLuhnCompliant;
+		}
+
+		public void setIsLuhnCompliant(boolean isLuhnCompliant)
+		{
+			this.isLuhnCompliant = isLuhnCompliant;
+		}
 
 		public boolean charge(int amount)
 		{
@@ -74,29 +88,34 @@ public class CreditCardProcessor
 
 		public void credit(int amount)
 		{
-			amount -= limit;
+			balance -= amount;
 		}
 	}
 
 	private Map<String, CreditCard> creditCards;
+	private String output;
 
 	public CreditCardProcessor()
 	{
 		creditCards = new HashMap<String, CreditCard>();
+		output = "Transaction Summary\n" +
+					"===================\n";
 	}
 
-	private boolean addCreditCard(String name, int number, int limit)
+	private boolean addCreditCard(String name, String number, int limit)
 	{
 		if(//String.valueOf(number).length() < 20 && 
-			luhnTest(String.valueOf(number)) 
+			luhnTest(number) 
 			&& !creditCards.containsKey(name))
 		{
-			CreditCard newCard = new CreditCard(name, number, limit);
+			CreditCard newCard = new CreditCard(name, number, limit, true);
 			creditCards.put(name, newCard);
 			return true;
 		}
 		else
 		{
+			CreditCard newCard = new CreditCard(name, number, limit, false);
+			creditCards.put(name, newCard);
 			return false;
 		}
 	}
@@ -143,29 +162,66 @@ public class CreditCardProcessor
 	{
 		//can process input through command line args or text file
 
-		System.out.println("Please add, credit or charge:");
+		System.out.println("Please Add, Credit, Charge or Quit:");
 		Scanner scanner = new Scanner(System.in);
-
+		
 		String command = scanner.nextLine();
-		String[] splitCommand = command.split("\\s+");
+		String[] splitCommand;
 
-		processCommand(splitCommand);
+		while(!command.equalsIgnoreCase("quit"))
+		{
+			splitCommand = command.split("\\s+");
+			processCommand(splitCommand);
+			command = scanner.nextLine();
+		}
+		
+		System.out.println(generateOutput());
 	}
 
 	private void processCommand(String[] args)
 	{
 		if(args[0].equals("Add") 
 			&& args[1].matches("[a-zA-Z]+") 
-			&& args[2].matches("\\d{19}")
+			&& args[2].matches("\\d{16,19}")
 			&& args[3] != null)
 		{
-			addCreditCard(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+			addCreditCard(args[1], args[2], Integer.parseInt(args[3].substring(1)));
 		}
-		else
+		else if(args[0].equals("Credit") 
+			&& args[1].matches("[a-zA-Z]+") 
+			&& args[2] != null)
 		{
-			
+			creditCard(args[1], Integer.parseInt(args[2].substring(1)));
 		}
-		//if(args		
+		else if(args[0].equals("Charge") 
+			&& args[1].matches("[a-zA-Z]+") 
+			&& args[2] != null)
+		{
+			chargeCard(args[1], Integer.parseInt(args[2].substring(1)));
+		}
+		//if(args
+	}
+	private String generateOutput()
+	{
+		StringBuilder output = new StringBuilder("Transaction Summary\n" +
+															  "==========================\n");
+
+		for(Map.Entry<String, CreditCard> entry : creditCards.entrySet())
+		{
+			if(entry.getValue().getIsLuhnCompliant())
+			{
+				output.append(entry.getKey() + ": $" + entry.getValue().getBalance() + "\n");
+			}
+			else
+			{
+				output.append(entry.getKey() + ": error\n");
+			}
+		}
+		
+		output.append("==========================\n" +
+						  "End of Transaction Summary\n");
+
+		return output.toString();
 	}
 /*
 evenSum = 6 + 6 + 2 + 4 + -7 +  + 12 + 8 = 56 - (4*9) = 56-36 = 20
