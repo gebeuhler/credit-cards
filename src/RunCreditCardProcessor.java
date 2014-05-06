@@ -8,5 +8,7 @@ public class RunCreditCardProcessor
 		//can work through command line or read a file
 		if(args.length == 0)
 			ccProcessor.runOnCommands();
+		else
+			ccProcessor.runOnFile(args[0]);
 	}
 }

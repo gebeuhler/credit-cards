@@ -178,6 +178,12 @@ public class CreditCardProcessor
 		System.out.println(generateOutput());
 	}
 
+	public void runOnFile(String filename)
+	{
+		 File file = new File(filename);
+       Scanner scanner = new Scanner(file);
+	}
+
 	private void processCommand(String[] args)
 	{
 		if(args[0].equals("Add") 
