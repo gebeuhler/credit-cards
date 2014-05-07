@@ -1,8 +1,9 @@
-//package com.george.creditcards;
-
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.lang.StringBuilder;
-//import java.math.BigInteger;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class CreditCardProcessor
 {
@@ -93,19 +94,15 @@ public class CreditCardProcessor
 	}
 
 	private Map<String, CreditCard> creditCards;
-	private String output;
 
 	public CreditCardProcessor()
 	{
 		creditCards = new HashMap<String, CreditCard>();
-		output = "Transaction Summary\n" +
-					"===================\n";
 	}
 
 	private boolean addCreditCard(String name, String number, int limit)
 	{
-		if(//String.valueOf(number).length() < 20 && 
-			luhnTest(number) 
+		if(luhnTest(number) 
 			&& !creditCards.containsKey(name))
 		{
 			CreditCard newCard = new CreditCard(name, number, limit, true);
@@ -144,11 +141,11 @@ public class CreditCardProcessor
         for(int i = 0 ;i < reverse.length();i++){
             int digit = Character.digit(reverse.charAt(i), 10);
             if(i % 2 == 0)
-			{//this is for odd digits, they are 1-indexed in the algorithm
+			{
                 oddSum += digit;
             }
 			else
-			{//add 2 * digit if 0-4, add 2 * digit - 9 if 5-9
+			{
                 evenSum += 2 * digit;
                 if(digit >= 5){
                     evenSum -= 9;
@@ -158,10 +155,8 @@ public class CreditCardProcessor
         return (oddSum + evenSum) % 10 == 0;
     }
 
-	public void runOnCommands()
+	public void runAsInterpreter()
 	{
-		//can process input through command line args or text file
-
 		System.out.println("Please Add, Credit, Charge or Quit:");
 		Scanner scanner = new Scanner(System.in);
 		
@@ -172,16 +167,42 @@ public class CreditCardProcessor
 		{
 			splitCommand = command.split("\\s+");
 			processCommand(splitCommand);
+			System.out.println("Transaction processed! Please enter another or 'quit'");
 			command = scanner.nextLine();
 		}
 		
-		System.out.println(generateOutput());
+		System.out.println(generateTransactionSummary());
 	}
 
 	public void runOnFile(String filename)
 	{
-		 File file = new File(filename);
-       Scanner scanner = new Scanner(file);
+		File file = new File(filename);
+		Scanner scanner;
+
+		try
+		{
+			scanner = new Scanner(file);
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println(e.getMessage());
+			return;
+		}
+
+		System.out.println("\nTransactions are being processed");
+
+		String command = scanner.nextLine();
+		String[] splitCommand;
+
+		while(scanner.hasNextLine())
+		{
+			splitCommand = command.split("\\s+");
+			processCommand(splitCommand);
+			command = scanner.nextLine();
+		}
+
+		System.out.println("\nTransaction processing has finished");
+		System.out.println(generateTransactionSummary());
 	}
 
 	private void processCommand(String[] args)
@@ -205,53 +226,34 @@ public class CreditCardProcessor
 		{
 			chargeCard(args[1], Integer.parseInt(args[2].substring(1)));
 		}
-		//if(args
 	}
-	private String generateOutput()
+	private String generateTransactionSummary()
 	{
-		StringBuilder output = new StringBuilder("Transaction Summary\n" +
-															  "==========================\n");
+		StringBuilder transactionSummary = new StringBuilder("\nBegin Transaction Summary\n"
+												  + "==========================\n");
 
-		for(Map.Entry<String, CreditCard> entry : creditCards.entrySet())
+		if(creditCards.isEmpty())
 		{
-			if(entry.getValue().getIsLuhnCompliant())
+			transactionSummary.append("No transactions processed\n");
+		}
+		else
+		{
+			for(Map.Entry<String, CreditCard> entry : creditCards.entrySet())
 			{
-				output.append(entry.getKey() + ": $" + entry.getValue().getBalance() + "\n");
-			}
-			else
-			{
-				output.append(entry.getKey() + ": error\n");
+				if(entry.getValue().getIsLuhnCompliant())
+				{
+					transactionSummary.append(entry.getKey() + ": $" + entry.getValue().getBalance() + "\n");
+				}
+				else
+				{
+					transactionSummary.append(entry.getKey() + ": error\n");
+				}
 			}
 		}
 		
-		output.append("==========================\n" +
-						  "End of Transaction Summary\n");
+		transactionSummary.append("==========================\n"
+					  + "End Transaction Summary\n");
 
-		return output.toString();
+		return transactionSummary.toString();
 	}
-/*
-evenSum = 6 + 6 + 2 + 4 + -7 +  + 12 + 8 = 56 - (4*9) = 56-36 = 20
-evenSum = 6 + 6 + 2 + 4 + 2 + 7 + 3 + 8 = 38
-digit = 0 1 2 3 4 5 6 7 8
-
-4266 8413 2316 3335
-
-53 33 61 32 31 48 66 24
-
-odd
-5 + 3 + 6 + 3 + 3 + 4 + 6 + 2 = 32
-
-even
-3,3,1,2,1,8,6,4
-*2
-6,6,2,4,2,16,12,8
-
-6+6+2+4+2+7+3+8 = 38
-
-32 + 38 = 70
-
-odd sum += 5
-
-even sum += 2*3
-*/
 }
