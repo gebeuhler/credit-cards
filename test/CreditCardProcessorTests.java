@@ -30,7 +30,11 @@ public class CreditCardProcessorTests
 		CreditCardProcessor ccProcessor = new CreditCardProcessor();
 		//Luhn Compliant Card
 		ccProcessor.addCreditCard("Tom", "4012888888881881", 2000);
-		assertEquals("These should match", ccProcessor.generateTransactionSummary(), SUMMARY_HEADER + "Tom: $0\n" + SUMMARY_FOOTER);
+		assertEquals("Balance of new card equals 0", ccProcessor.getCreditCards().get("Tom").getBalance(), 0);
+		//assertEquals("Adding Luhn Compliant Credit Card", ccProcessor.generateTransactionSummary(), SUMMARY_HEADER + "Tom: $0\n" + SUMMARY_FOOTER);
+		//Non Luhn Compliant Card
+		ccProcessor.addCreditCard("Tom", "1234123412341234", 2000);
+		//assertEquals
 	}
 
 }
