@@ -6,10 +6,10 @@ public class TestRunner
 {
 	public static void main(String[] args) 
 	{
-	    Result result = JUnitCore.runClasses(CreditCardProcessorTests.class);
+		Result result = JUnitCore.runClasses(CreditCardProcessorTests.class);
     
 		for (Failure failure : result.getFailures()) {
 	      System.out.println(failure.toString());
 	    }
 	}
-
+}

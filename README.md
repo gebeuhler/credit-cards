@@ -2,17 +2,33 @@ George Beuhler 2014 gebeuhler@gmail.com
 
 All instructions are for Linux and from project root
 
+
 To compile:
 
 javac -g src/*.java -d bin
+
 
 To run interpreter style:
 
 java -cp bin RunCreditCardProcessor
 
+
 To run from a file:
 
 java -cp bin RunCreditCardProcessor data/transactions.txt
+
+
+To compile tests:
+
+javac -cp lib/*:src test/*.java -d bin
+
+
+To run tests:
+
+java -cp lib/*:bin TestRunner
+
+The output will be blank if all tests pass.
+
 
 Design Decisions:
 

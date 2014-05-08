@@ -227,7 +227,8 @@ public class CreditCardProcessor
 			chargeCard(args[1], Integer.parseInt(args[2].substring(1)));
 		}
 	}
-	private String generateTransactionSummary()
+
+	public String generateTransactionSummary()
 	{
 		StringBuilder transactionSummary = new StringBuilder("\nBegin Transaction Summary\n"
 												  + "==========================\n");
