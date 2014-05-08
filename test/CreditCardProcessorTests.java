@@ -38,7 +38,7 @@ public class CreditCardProcessorTests
 	}
 
 	@Test
-	public void addLuhnCompliantCreditCard()
+	public void addLuhnCompliantCreditCardSucceeds()
 	{
 		CreditCardProcessor ccProcessor = new CreditCardProcessor();
 		ccProcessor.addCreditCard("Tom", "4012888888881881", 2000);
@@ -46,7 +46,7 @@ public class CreditCardProcessorTests
 	}
 
 	@Test
-	public void addNonLuhnCompliantCreditCard()
+	public void addNonLuhnCompliantCreditCardFails()
 	{
 		CreditCardProcessor ccProcessor = new CreditCardProcessor();
 		ccProcessor.addCreditCard("Tom", "1234123412341234", 2000);
