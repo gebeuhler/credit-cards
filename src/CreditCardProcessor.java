@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Scanner;
 import java.lang.StringBuilder;
 import java.io.File;
@@ -11,38 +12,35 @@ public class CreditCardProcessor
 
 	public CreditCardProcessor()
 	{
-		creditCards = new HashMap<String, CreditCard>();
+		creditCards = new TreeMap<String, CreditCard>();
 	}
 
-	public boolean addCreditCard(String name, String number, int limit)
+	public void addCreditCard(String name, String number, int limit)
 	{
 		if(luhnTest(number) 
 			&& !creditCards.containsKey(name))
 		{
 			CreditCard newCard = new CreditCard(name, number, limit, true);
 			creditCards.put(name, newCard);
-			return true;
 		}
 		else
 		{
 			CreditCard newCard = new CreditCard(name, number, limit, false);
 			creditCards.put(name, newCard);
-			return false;
 		}
 	}
 
-	public boolean chargeCard(String name, int amount)
+	public void chargeCard(String name, int amount)
 	{
-		if(creditCards.containsKey(name))
+		if(creditCards.containsKey(name) && creditCards.get(name).getIsLuhnCompliant())
 		{
-			return creditCards.get(name).charge(amount);
+			creditCards.get(name).charge(amount);
 		}
-		return false;
 	}
 
 	public void creditCard(String name, int amount)
 	{
-		if(creditCards.containsKey(name))
+		if(creditCards.containsKey(name) && creditCards.get(name).getIsLuhnCompliant())
 		{
 			creditCards.get(name).credit(amount);
 		}
@@ -85,7 +83,7 @@ public class CreditCardProcessor
 			command = scanner.nextLine();
 		}
 		
-		System.out.println(generateTransactionSummary());
+		System.out.println(getTransactionSummary());
 	}
 
 	public void runOnFile(String filename)
@@ -116,7 +114,7 @@ public class CreditCardProcessor
 		}
 
 		System.out.println("\nTransaction processing has finished");
-		System.out.println(generateTransactionSummary());
+		System.out.println(getTransactionSummary());
 	}
 
 	private void processCommand(String[] args)
@@ -142,7 +140,7 @@ public class CreditCardProcessor
 		}
 	}
 
-	public String generateTransactionSummary()
+	public String getTransactionSummary()
 	{
 		StringBuilder transactionSummary = new StringBuilder("\nBegin Transaction Summary\n"
 												  + "==========================\n");

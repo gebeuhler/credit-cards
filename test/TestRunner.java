@@ -8,8 +8,14 @@ public class TestRunner
 	{
 		Result result = JUnitCore.runClasses(CreditCardProcessorTests.class);
     
-		for (Failure failure : result.getFailures()) {
-	      System.out.println(failure.toString());
-	    }
+		if(result.getFailureCount() == 0)
+			System.out.println("All tests have passed!");
+		else
+		{
+			for (Failure failure : result.getFailures()) 
+			{
+		      System.out.println(failure.toString());
+			}
+		}
 	}
 }

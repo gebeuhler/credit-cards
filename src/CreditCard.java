@@ -67,17 +67,10 @@ public class CreditCard
 		this.isLuhnCompliant = isLuhnCompliant;
 	}
 
-	public boolean charge(int amount)
+	public void charge(int amount)
 	{
 		if(balance + amount <= limit)
-		{
 			balance += amount;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	public void credit(int amount)
