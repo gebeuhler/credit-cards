@@ -47,20 +47,20 @@ public class CreditCardProcessor
 
 	private boolean luhnTest(String number)
 	{
-        int oddSum = 0, evenSum = 0;
-        String reverse = new StringBuffer(number).reverse().toString();
-        for(int i = 0 ;i < reverse.length();i++){
-            int digit = Character.digit(reverse.charAt(i), 10);
-            if(i % 2 == 0)
+		int oddSum = 0, evenSum = 0;
+      String reverse = new StringBuffer(number).reverse().toString();
+      for(int i = 0 ;i < reverse.length();i++)
+		{
+			int digit = Character.digit(reverse.charAt(i), 10);
+         if(i % 2 == 0)
 			{
-                oddSum += digit;
+				oddSum += digit;
             }
-			else
-			{
+				else
+				{
                 evenSum += 2 * digit;
-                if(digit >= 5){
+                if(digit >= 5)
                     evenSum -= 9;
-                }
             }
         }
         return (oddSum + evenSum) % 10 == 0;
