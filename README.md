@@ -12,9 +12,7 @@ java -cp bin RunCreditCardProcessor
 
 To run from a file:
 
-java -cp bin RunCreditCardProcessor <filename>
-
-data/transactions.txt is supplied
+java -cp bin RunCreditCardProcessor data/transactions.txt
 
 Design Decisions:
 
