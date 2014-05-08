@@ -1,5 +1,3 @@
-package com.george.creditcards;
-
 import static org.junit.Assert.assertEquals;
 
 import org.junit.*;
