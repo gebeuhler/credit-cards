@@ -5,7 +5,7 @@ All instructions are for Linux and from project root
 
 To compile:
 
-javac -g src/*.java -d bin
+javac src/*.java -d bin
 
 
 To run interpreter style:
