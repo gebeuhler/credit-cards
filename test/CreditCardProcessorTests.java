@@ -21,7 +21,7 @@ public class CreditCardProcessorTests
 	}
 
 	@Test
-	public void addCreditCard()
+	public void testAll()
 	{
 		CreditCardProcessor ccProcessor = new CreditCardProcessor();
 		

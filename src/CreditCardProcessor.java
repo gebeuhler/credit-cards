@@ -100,7 +100,7 @@ public class CreditCardProcessor
 		creditCards = new HashMap<String, CreditCard>();
 	}
 
-	private boolean addCreditCard(String name, String number, int limit)
+	public boolean addCreditCard(String name, String number, int limit)
 	{
 		if(luhnTest(number) 
 			&& !creditCards.containsKey(name))
@@ -117,7 +117,7 @@ public class CreditCardProcessor
 		}
 	}
 
-	private boolean chargeCard(String name, int amount)
+	public boolean chargeCard(String name, int amount)
 	{
 		if(creditCards.containsKey(name))
 		{
@@ -126,7 +126,7 @@ public class CreditCardProcessor
 		return false;
 	}
 
-	private void creditCard(String name, int amount)
+	public void creditCard(String name, int amount)
 	{
 		if(creditCards.containsKey(name))
 		{
