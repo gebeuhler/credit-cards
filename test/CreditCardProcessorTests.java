@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.*;
 
@@ -26,14 +27,27 @@ public class CreditCardProcessorTests
 	}
 
 	@Test
-	public void addCreditCard()
+	public void addZeroBalance()
 	{
 		CreditCardProcessor ccProcessor = new CreditCardProcessor();
 		ccProcessor.addCreditCard("Tom", "4012888888881881", 2000);
-		//$0 balance
 		assertEquals("Balance of new card equals 0", ccProcessor.getCreditCards().get("Tom").getBalance(), 0);
-		//Luhn compliant card
+	}
+
+	@Test
+	public void addLuhnCreditCard()
+	{
+		CreditCardProcessor ccProcessor = new CreditCardProcessor();
+		ccProcessor.addCreditCard("Tom", "4012888888881881", 2000);
 		assertTrue(ccProcessor.getCreditCards().get("Tom").getIsLuhnCompliant());
+	}
+
+	@Test
+	public void addNonLuhnCreditCard()
+	{
+		CreditCardProcessor ccProcessor = new CreditCardProcessor();
+		ccProcessor.addCreditCard("Tom", "1234123412341234", 2000);
+		assertFalse(ccProcessor.getCreditCards().get("Tom").getIsLuhnCompliant());
 	}
 
 }
