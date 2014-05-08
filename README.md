@@ -27,8 +27,6 @@ To run tests:
 
 java -cp lib/*:bin TestRunner
 
-The output will be blank if all tests pass.
-
 
 Design Decisions:
 
